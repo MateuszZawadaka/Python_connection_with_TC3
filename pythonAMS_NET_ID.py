@@ -12,8 +12,15 @@ plc_address_input = customtkinter.CTkEntry(master=root_tk, width=190, height=20,
 plc_address_input.place(relx=0.1, rely=0.1, anchor=customtkinter.CENTER)
 plc_port_input = customtkinter.CTkEntry(master=root_tk, width=190, height=20, corner_radius=5, placeholder_text="PLC PORT:" )
 plc_port_input.place(relx=0.1, rely=0.2, anchor=customtkinter.CENTER)
-
-def open_connection(plc_address= "192.168.17.156.1.1", plc_port= 851, variable_name = "GvlInputs.iVar"):
+variabe_name = customtkinter.CTkEntry(master=root_tk, width=190, height=20, corner_radius=5, placeholder_text="Variable name: ")
+variabe_name.place(relx=0.1, rely=0.25, anchor=customtkinter.CENTER)
+#plc_address= "192.168.17.156.1.1"
+#, plc_port= 851
+#variable_name = "GvlInputs.iVar"
+def open_connection():
+    plc_address = plc_address_input.get()
+    plc_port = int(plc_port_input.get())
+    variable_name = variabe_name.get()
     try:
         # Open a connection to the TwinCAT PLC
         with pyads.Connection(plc_address, plc_port) as plc:
@@ -26,6 +33,8 @@ def open_connection(plc_address= "192.168.17.156.1.1", plc_port= 851, variable_n
             # ...
     except pyads.ADSError as e:
         print(f"Failed to open connection: {e}")
+        error_message_label = customtkinter.CTkLabel(master=root_tk, text=f"Failed to open connection: {e}", width=120, height=20, corner_radius=1, text_color="white", bg_color="red")
+        error_message_label.place(relx=0.4, rely=0.05, anchor=customtkinter.CENTER)
 def button_pressed():
     open_connection()
 
@@ -39,8 +48,5 @@ if __name__ == "__main__":
     button = customtkinter.CTkButton(master=root_tk, text="Read variable value", corner_radius=10, command=button_pressed)
     button.place(relx = 0.8, rely = 0.2, anchor=customtkinter.CENTER)
     root_tk.mainloop()
-    # Replace '127.0.0.1.1.1' and 851 with the actual PLC IP address and port
-    #open_connection(plc_address, plc_port)
-    #read_twinCAT_variable(variable_name = "GvlInpus.iVar", plc_address = plc_address, plc_port = plc_port )
 
 
