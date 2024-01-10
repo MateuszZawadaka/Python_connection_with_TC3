@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 import numpy as np
 
 class PIDController:
@@ -35,16 +36,23 @@ def simulate_system(pid_controller, setpoint, initial_value, time_end, time_step
 
     return time_values, process_variable_values
 
+def setpointGenerator():
+    plt.clf()
+    plt.plot(time_values, process_variable_change, label="setpointGenerator")
+    plt.legend()
+    fig, ax = plt.subplots()
+    animation = FuncAnimation(fig, update, frames=range(400), interval=100)
+    plt.show()
 def main():
     # PID controller parameters
-    Kp = 2
-    Ki = 0.1
-    Kd = 0.3
+    Kp = 6
+    Ki = 0.02
+    Kd = 0.004
 
     # Simulation parameters
-    setpoint = 300
-    initial_value = 0.0
-    time_end = 1000
+    setpoint = 200
+    initial_value = 36
+    time_end = 420
     time_step = 0.1
 
     pid_controller = PIDController(Kp, Ki, Kd)
@@ -62,4 +70,6 @@ def main():
     plt.show()
 
 if __name__ == "__main__":
+    setpointGenerator()
     main()
+    
