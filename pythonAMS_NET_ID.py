@@ -24,7 +24,8 @@ stop_button_variable_path = "Stop button variable path"
 #value_to_write_input.place(relx=0.9, rely=0.27, anchor=customtkinter.CENTER)
 motor_velocity_value_to_write = customtkinter.CTkEntry(master=root_tk, width=190, height=20, corner_radius=5, placeholder_text="Motor velocity: ")
 motor_velocity_value_to_write.place(relx=0.8, rely=0.35)
-
+heater_temperature_value_to_write = customtkinter.CTkEntry(master=root_tk, width=190, height=20, corner_radius=5, placeholder_text="Heater temperature: ")
+motor_velocity_value_to_write.place(relx=0.8, rely=0.45)
 
 def open_connection():
     plc_address = plc_address_input.get()
@@ -106,6 +107,25 @@ def write_motor_velocity():
         error_message_label = customtkinter.CTkLabel(master=root_tk, text=f"Failed to open connection: {e}", width=120, height=20, corner_radius=1, text_color="white", bg_color="red")
         error_message_label.place(relx=0.4, rely=0.1, anchor=customtkinter.CENTER)       
 
+def write_heater_temperature():
+    plc_address = plc_address_input.get()
+    plc_port = int(plc_port_input.get())
+    heater_temperature_variable_name = heater_temperature_variable_path
+    heater_temperature_variable_value = int(heater_temperature_variable_value.get())
+    try:
+        with pyads.Connection(plc_address, plc_port) as plc:
+            plc.open()
+
+            result = plc.write_by_name(heater_temperature_variable_name, int(heater_temperature_variable_value))
+            if result == 0:
+                print(f"{heater_temperature_variable_name} set to {heater_temperature_variable_value}")
+
+            else:
+                print(f"Failed to write {heater_temperature_variable_name}. Error code {result}")
+    except pyads.ADSError as e:
+         print(f"Failed to open connection: {e}")
+         error_message_label = customtkinter.CTkLabel(master=root_tk, text=f"Failed to open connection: {e}", width=120, height=20, corner_radius=1, text_color="white", bg_color="red")
+         error_message_label.place(relx=0.4, rely=0.1, anchor=customtkinter.CENTER)        
 
 def select_plc_parameters():
     print("Address: ",plc_address_input.get())
